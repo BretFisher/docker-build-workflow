@@ -137,7 +137,7 @@ jobs:
           tags: ${{ inputs.tag-rules }}
       -
         # this will build the images, once per platform,
-        # then push to both Docker Hub and GHCR
+        # then push to one or more registries (based on image list above in docker_meta)
         name: Docker Build and Push
         id: build_image
         uses: docker/build-push-action@v2
@@ -148,10 +148,9 @@ jobs:
           target: ${{ inputs.target }}
           builder: ${{ steps.buildx.outputs.name }}
           # it uses github cache API for faster builds:
-          # https://github.com/crazy-max/docker-build-push-action/blob/master/docs/advanced/cache.md#cache-backend-api
+          # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#cache-backend-api
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # for an approved pull_request, only push pr-specific tags
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
