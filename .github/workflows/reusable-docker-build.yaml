@@ -8,7 +8,7 @@ on:
     # - only able to push to Docker Hub and/or GHCR (GHCR by default)
     # - Builds on PR with tag of `prNUMBER` (same tag each PR push)
     # - Builds on push to main branch with tag of `latest`
-    # ???? what else
+    # - Builds on tag push with semver
 
   workflow_call:
     # allow reuse of this workflow in other repos
@@ -22,6 +22,11 @@ on:
         description: Log into GHCR
         required: false
         default: true
+        type: boolean
+      comment-enable:
+        description: Create a PR comment with image tags and labels
+        required: false
+        default: false
         type: boolean
       context:
         description: Docker context (path) to start build from
@@ -47,12 +52,10 @@ on:
         description: A list of the account/repo names for docker build
         required: true
         type: string
-        default: |
-          ghcr.io/${{ github.repository }}
       tag-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#tags-input
         description: Use docker-metadata action to create tags from a key-value pair list in CSV format
-        required: false
+        required: true
         type: string
         default: |
             type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
@@ -159,7 +162,7 @@ jobs:
         # from https://github.com/marketplace/actions/create-or-update-comment
         name: Find comment for image tags
         uses: peter-evans/find-comment@v1
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && inputs.comment-enable
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -169,7 +172,7 @@ jobs:
         # If PR, put image tags in the PR comments
       - name: Create or update comment for image tags
         uses: peter-evans/create-or-update-comment@v1
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && inputs.comment-enable
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
