@@ -23,7 +23,7 @@ jobs:
 
     name: Call Docker Build
 
-    uses: ./.github/workflows/reusable-docker-build.yaml@updates-for-allhands
+    uses: ./.github/workflows/reusable-docker-build.yaml
 
     permissions:
       contents: read
