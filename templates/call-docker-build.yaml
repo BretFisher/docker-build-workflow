@@ -34,6 +34,7 @@ jobs:
       dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
 
       # Only needed if with:dockerhub-enable is true below
+      # https://hub.docker.com/settings/security
       dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
 
     with:

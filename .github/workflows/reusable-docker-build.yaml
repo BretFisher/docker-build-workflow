@@ -62,6 +62,7 @@ on:
             type=ref,event=pr
             type=ref,event=branch
             type=semver,pattern={{version}}
+            type=raw,value=gha-${{ github.run_id }}
       flavor-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
         description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
@@ -107,7 +108,7 @@ jobs:
       # all tags from docker build
       image-tags: ${{ steps.docker_meta.outputs.tags }}
       # only outputs the unique gha- image tag that's unique to each build
-      ghcr-tag: ${{ steps.ghcr-tag.outputs.ref }}
+      ghcr-tag: ${{ steps.ghcr-tag.outputs.tag }}
 
     steps:
       -
@@ -201,5 +202,4 @@ jobs:
         id: ghcr-tag
         run: |
           echo '::echo::on'
-          IMAGE_TAG=$(echo '${{ steps.docker_meta.outputs.tags }}' | grep gha- )
-          echo "::set-output name=ref::$IMAGE_TAG"
+          echo "::set-output name=tag::gha-${{ github.run_id }}"
