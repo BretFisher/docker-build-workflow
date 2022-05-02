@@ -29,6 +29,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 - [bretfisher/super-linter-workflow](https://github.com/BretFisher/super-linter-workflow) - Reusable linter workflow
 - (you are here) [bretfisher/docker-build-workflow](https://github.com/BretFisher/docker-build-workflow)- Reusable docker build workflow
 - [bretfisher/allhands22](https://github.com/BretFisher/github-actions-templates) - Step by step example of a Docker workflow
+- [My full list of container examples and tools](https://github.com/bretfisher)
 
 ## More reading
 
