@@ -88,7 +88,7 @@ on:
 
 
 # permissions: GITHUB_TOKEN are better set by the **calling** workflow
-# but we'll set defaults here for running in this repo
+# but we'll set defaults here for reference
 # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
 
 permissions:
@@ -97,9 +97,18 @@ permissions:
   pull-requests: write # needed to create and update comments in PRs
 
 jobs:
-  build-and-push-image:
+  build-image:
+
     name: Build+Push
+
     runs-on: ubuntu-latest
+
+    outputs:
+      # all tags from docker build
+      image-tags: ${{ steps.docker_meta.outputs.tags }}
+      # only outputs the unique gha- image tag that's unique to each build
+      ghcr-tag: ${{ steps.ghcr-tag.outputs.ref }}
+
     steps:
       -
         name: Checkout
@@ -187,3 +196,10 @@ jobs:
             ${{ steps.docker_meta.outputs.labels }}
             ```
           edit-mode: replace
+
+      - name: Find the gha-run-based image tag we just pushed to ghcr.io
+        id: ghcr-tag
+        run: |
+          echo '::echo::on'
+          IMAGE_TAG=$(echo '${{ steps.docker_meta.outputs.tags }}' | grep gha- )
+          echo "::set-output name=ref::$IMAGE_TAG"
