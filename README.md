@@ -1,5 +1,8 @@
 # Docker Build and Push GitHub Actions Workflow
 
+[![Lint Code Base](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-super-linter.yaml/badge.svg)](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-super-linter.yaml)
+[![Docker Build](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-local-docker-build.yaml/badge.svg)](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-local-docker-build.yaml)
+
 A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings from production use.
 
 ## Reasons to use this workflow
