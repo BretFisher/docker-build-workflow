@@ -26,7 +26,7 @@ on:
       comment-enable:
         description: Create a PR comment with image tags and labels
         required: false
-        default: false
+        default: true
         type: boolean
       context:
         description: Docker context (path) to start build from
@@ -47,11 +47,13 @@ on:
         type: string
         # common ones: linux/amd64,linux/arm64,linux/arm/v7
         default: linux/amd64
-      # TODO: does this work in calling repos?
       image-names:
         description: A list of the account/repo names for docker build
-        required: true
+        required: false
         type: string
+        default: |
+          ${{ github.repository }}
+          ghcr.io/${{ github.repository }}
       tag-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#tags-input
         description: Use docker-metadata action to create tags from a key-value pair list in CSV format
@@ -80,9 +82,6 @@ on:
         required: false
 
     outputs:
-      image-tags:
-        description: "all tags from docker build"
-        value: ${{ jobs.build-image.outputs.image-tags }}
       ghcr-tag:
         description: "single-use tag for ghcr.io"
         value: ${{ jobs.build-image.outputs.ghcr-tag }}
@@ -105,8 +104,6 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      # all tags from docker build
-      image-tags: ${{ steps.docker_meta.outputs.tags }}
       # only outputs the unique gha- image tag that's unique to each build
       ghcr-tag: ${{ steps.ghcr-tag.outputs.tag }}
 
