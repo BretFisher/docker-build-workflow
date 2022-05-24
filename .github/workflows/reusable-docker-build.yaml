@@ -63,7 +63,6 @@ on:
           type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
           type=raw,value=stable-{{date 'YYYYMMDDHHmmss'}},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
           type=ref,event=pr
-          type=ref,event=branch
           type=raw,value=gha-${{ github.run_id }}
       flavor-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
