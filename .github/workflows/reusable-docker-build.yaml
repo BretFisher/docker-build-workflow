@@ -149,7 +149,7 @@ jobs:
         # then push to one or more registries (based on image list above in docker_meta)
         name: Docker Build and Push
         id: build_image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           platforms: ${{ inputs.platforms }}
           context: ${{ inputs.context }}
