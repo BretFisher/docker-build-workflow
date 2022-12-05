@@ -198,4 +198,4 @@ jobs:
         id: ghcr-tag
         run: |
           echo '::echo::on'
-          echo "::set-output name=tag::gha-${{ github.run_id }}"
+          echo "tag=gha-${{ github.run_id }}" >> $GITHUB_OUTPUT
