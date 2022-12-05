@@ -197,6 +197,6 @@ jobs:
       - name: Find the gha-run-based image tag we just pushed to ghcr.io
         id: ghcr-tag
         run: |
-          # shellcheck disable=SC2086
           echo '::echo::on'
+          # shellcheck disable=SC2086
           echo "tag=gha-${{ github.run_id }}" >> $GITHUB_OUTPUT
