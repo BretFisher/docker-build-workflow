@@ -185,7 +185,7 @@ jobs:
           body: |
             Docker image tag(s) pushed:
             ```text
-            ${{ steps.docker_meta.outputs.tags }}
+            ${{ steps.docker_meta.outputs.tags }} 
             ```
 
             Labels added to images:
@@ -197,5 +197,6 @@ jobs:
       - name: Find the gha-run-based image tag we just pushed to ghcr.io
         id: ghcr-tag
         run: |
+          # shellcheck disable=SC2086
           echo '::echo::on'
           echo "tag=gha-${{ github.run_id }}" >> $GITHUB_OUTPUT
