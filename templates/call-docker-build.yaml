@@ -25,6 +25,7 @@ jobs:
 
     permissions:
       contents: read
+      actions: write # needed to cancel previous workflows in progress
       packages: write # needed to push docker image to ghcr.io
       pull-requests: write # needed to create and update comments in PRs
     
@@ -43,6 +44,10 @@ jobs:
       ### NOTE if Docker Hub is set to true, you must set secrets above and also add account/repo/tags below
       dockerhub-enable: true
       ghcr-enable: true
+
+      ### Number of commits to fetch. 0 indicates all history.
+      ### defaults to 1
+      fetch-depth: 1
 
       ### A list of the account/repo names for docker build. List should match what's enabled above
       ### defaults to:
@@ -67,6 +72,10 @@ jobs:
       ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
       # file: Containerfile
 
+      ### List of build-time variables
+      ### defaults to empty list
+      # build-args:
+
       ### build stage to target, defaults to empty, which builds to last stage in Dockerfile
       # target:
       
@@ -78,3 +87,7 @@ jobs:
       ### Create a PR comment with image tags and labels
       ### defaults to true
       # comment-enable: false
+
+      ### Cancel previous run in progress (ignoring SHA, all but latest)
+      ### defaults to false
+      # cancel-previous-runs: false

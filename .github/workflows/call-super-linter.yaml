@@ -9,6 +9,9 @@ on:
   
   pull_request:
 
+  workflow_dispatch:
+  repository_dispatch:
+
 jobs:
   call-super-linter:
 

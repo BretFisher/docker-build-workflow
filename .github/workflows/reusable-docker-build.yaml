@@ -23,10 +23,20 @@ on:
         required: false
         default: true
         type: boolean
+      fetch-depth:
+        description: Number of commits to fetch. 0 indicates all history.
+        required: false
+        default: 1
+        type: string
       comment-enable:
         description: Create a PR comment with image tags and labels
         required: false
         default: true
+        type: boolean
+      cancel-previous-runs:
+        description: Cancel previous run in progress (ignoring SHA, all but latest)
+        required: false
+        default: false
         type: boolean
       context:
         description: Docker context (path) to start build from
@@ -35,6 +45,10 @@ on:
         default: .
       file:
         description: Dockerfile to build, relative to context path
+        required: false
+        type: string
+      build-args:
+        description: List of build-time variables
         required: false
         type: string
       target:
@@ -92,6 +106,7 @@ on:
 
 permissions:
   contents: read
+  actions: write # needed to cancel previous workflows in progress
   packages: write # needed to push docker image to ghcr.io
   pull-requests: write # needed to create and update comments in PRs
 
@@ -108,8 +123,18 @@ jobs:
 
     steps:
       -
+        name: Cancel previous run in progress
+        if: inputs.cancel-previous-runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          ignore_sha: true
+          all_but_latest: true
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+      -
         name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: ${{ inputs.fetch-depth }}
       -
         # we need qemu and buildx so we can build multiple platforms later
         name: Set up QEMU
@@ -154,6 +179,7 @@ jobs:
           platforms: ${{ inputs.platforms }}
           context: ${{ inputs.context }}
           file: ${{ inputs.file }}
+          build-args: ${{ inputs.build-args }}
           target: ${{ inputs.target }}
           builder: ${{ steps.buildx.outputs.name }}
           # it uses github cache API for faster builds:
@@ -185,7 +211,7 @@ jobs:
           body: |
             Docker image tag(s) pushed:
             ```text
-            ${{ steps.docker_meta.outputs.tags }} 
+            ${{ steps.docker_meta.outputs.tags }}
             ```
 
             Labels added to images:
