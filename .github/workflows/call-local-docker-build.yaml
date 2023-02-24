@@ -15,6 +15,8 @@ on:
     paths-ignore:
       - 'README.md'
       - '.github/linters/**'
+  workflow_dispatch:
+  repository_dispatch:
 
 jobs:
   call-docker-build:
@@ -25,6 +27,7 @@ jobs:
 
     permissions:
       contents: read
+      actions: write
       packages: write
       pull-requests: write
     

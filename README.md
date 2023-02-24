@@ -18,6 +18,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 
 ## "But what does this workflow really do beyond just `docker build`?"
 
+0. Cancel previous in-progress build via styfle/cancel-workflow-action
 1. Clone the repository
 2. Setup QEMU for multi-platform building (buildx) via docker/setup-qemu-action
 3. Setup buildx for awesome and fast building via docker/setup-buildx-action
