@@ -9,7 +9,7 @@ run-name: 'Linting by ${{ github.actor }} for "${{ github.event.workflow_run.hea
 on:
   
   push:
-    branches: [main]
+   # branches: [main]
   
   pull_request:
 
