@@ -4,6 +4,8 @@
 # We call the reusable workflow from its file path.
 name: Docker Build
 
+run-name: '@${{ github.actor }} builds a container image for "${{ github.event.head_commit.message }}"'
+
 on:
   push:
     branches:

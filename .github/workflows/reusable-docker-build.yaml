@@ -1,8 +1,6 @@
 ---
 name: Docker Build and Push
 
-run-name: '@${{ github.actor }} builds a container image for "${{ github.event.head_commit.message }}"'
-
 on:
 
   # REUSABLE WORKFLOW with INPUTS
