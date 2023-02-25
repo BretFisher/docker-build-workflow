@@ -3,7 +3,7 @@
 name: Lint Code Base
 
 #run-name: '@${{ github.actor }} runs Super-Linter for "${{ github.event.head_commit.message }}"'
-run-name: 'Linting by ${{ github.actor }} for "${{ github.event.workflow_run.head_commit.message }}"'
+run-name: 'Linting by ${{ github.actor }} for ${{ github.event.workflow_run.head_commit.message }}'
 
 
 on:

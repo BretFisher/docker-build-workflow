@@ -4,7 +4,9 @@
 # We call the reusable workflow from its file path.
 name: Docker Build
 
-run-name: 'Docker build by ${{ github.actor }} for "${{ github.event.workflow_run.head_commit.message }}"'
+# run-name: 'Docker build by ${{ github.actor }} for "${{ github.event.workflow_run.head_commit.message }}"'
+run-name: 'Docker build by ${{ github.actor }} for ${{ github.event.workflow_run.head_commit.message }}'
+
 
 on:
   push:
@@ -19,6 +21,18 @@ on:
       - '.github/linters/**'
 
 jobs:
+
+  testing-event-messages:
+    
+    if: always()
+
+    run: |
+      echo "event_name: ${{ github.event_name }}"
+      echo "event.workflow_run: ${{ github.event.workflow_run }}"'
+      echo "event.head_commit: ${{ github.event.head_commit }}"'
+
+    
+
   call-docker-build:
 
     name: Call Docker Build
