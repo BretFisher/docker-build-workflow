@@ -2,7 +2,7 @@
 # template source: https://github.com/bretfisher/super-linter-workflow/blob/main/templates/call-super-linter.yaml
 name: Lint Code Base
 
-run-name: '@${{ github.actor }} runs Super-Linter for "${{ github.event.head_commit.message }}"'
+run-name: '@${{ github.actor }} runs Super-Linter for "${{ github.event.workflow_run.head_commit.message }}"'
 
 on:
   
