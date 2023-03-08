@@ -23,12 +23,12 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 3. Setup buildx for awesome and fast building via docker/setup-buildx-action
 4. Log into Docker Hub and/or GHCR
 5. Add labels and tags via docker/metadata-action
-6. Build and push image via docker/build-push-action with layer caching
+6. Build and push image via docker/build-push-action with GitHub-based layer caching
 7. Reports tags and labels in the PR comments
 
 ## This repository is part of my example DevOps repos on GitHub Actions
 
-- [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main repository
+- [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main reusable templates repository
 - [bretfisher/super-linter-workflow](https://github.com/BretFisher/super-linter-workflow) - Reusable linter workflow
 - (you are here) [bretfisher/docker-build-workflow](https://github.com/BretFisher/docker-build-workflow)- Reusable docker build workflow
 - [bretfisher/docker-ci-automation](https://github.com/BretFisher/docker-ci-automation) - Step by step video and example of a Docker CI workflow
@@ -41,6 +41,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 
 ## 🎉🎉🎉 Join my container DevOps community 🎉🎉🎉
 
-- [My "Vital DevOps" Discord server](https://devops.fan)
-- [My weekly YouTube Live show](https://bret.live)
+- [My Cloud Native DevOps Discord server](https://devops.fan)
+- [My weekly YouTube Live show](https://www.youtube.com/@BretFisher)
+- [My weekly newsletter](https://www.bretfisher.com/newsletter)
 - [My courses and coupons](https://www.bretfisher.com/courses)

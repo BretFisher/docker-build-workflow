@@ -22,7 +22,7 @@ jobs:
     ### https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
     ### you can also call workflows from inside the same repo via file path
 
-    #FIXME: customize uri to point to your own linter repository
+    #FIXME: customize uri to point to your own reusable linter repository
     uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main
     
     ### Optional settings examples
