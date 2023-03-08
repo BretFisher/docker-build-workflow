@@ -26,7 +26,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 6. Build and push image via docker/build-push-action with GitHub-based layer caching
 7. Reports tags and labels in the PR comments
 
-## This repository is part of my examples on GitHub Actions
+## This repository is part of my example DevOps repos on GitHub Actions
 
 - [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main reusable templates repository
 - [bretfisher/super-linter-workflow](https://github.com/BretFisher/super-linter-workflow) - Reusable linter workflow
