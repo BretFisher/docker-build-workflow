@@ -107,8 +107,9 @@ jobs:
       ghcr-tag: ${{ steps.ghcr-tag.outputs.tag }}
 
     steps:
-      # no need for manual checkout if all we're doing is build->push
-      # RE: https://github.com/docker/build-push-action/#git-context
+      -
+        name: Checkout
+        uses: actions/checkout@v3.3.0
       -
         # we need qemu and buildx so we can build multiple platforms later
         name: Set up QEMU
