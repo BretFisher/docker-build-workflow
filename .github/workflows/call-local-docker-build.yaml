@@ -18,17 +18,6 @@ on:
 
 jobs:
 
-  testing-event-messages:
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      -
-        run: |
-          echo "event_name: ${{ github.event_name }}"
-          # echo "event.workflow_run: ${{ github.event.workflow_run }}"
-          echo "event.head_commit: ${{ github.event.head_commit }}"
-          echo "event.head_commit.message: ${{ github.event.head_commit.message }}"
-
   call-docker-build:
 
     name: Call Docker Build
