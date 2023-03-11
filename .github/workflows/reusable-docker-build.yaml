@@ -163,6 +163,9 @@ jobs:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
+          # add attestations for provenance and sbom
+          provenance: true
+          sbom: true
       -
         # If PR, put image tags in the PR comments
         # from https://github.com/marketplace/actions/create-or-update-comment
