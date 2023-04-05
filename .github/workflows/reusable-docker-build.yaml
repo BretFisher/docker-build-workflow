@@ -48,6 +48,11 @@ on:
         type: string
         # common ones: linux/amd64,linux/arm64,linux/arm/v7
         default: linux/amd64
+      push:
+        description: Push image to registry(s)
+        required: false
+        type: boolean
+        default: true
       image-names:
         description: A list of the account/repo names for docker build to push to
         required: false
@@ -62,9 +67,9 @@ on:
         type: string
         default: |
           type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-          type=raw,value=stable-{{date 'YYYYMMDDHHmmss'}},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+          type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
           type=ref,event=pr
-          type=raw,value=gha-${{ github.run_id }}
+          type=sha,enable=${{ !endsWith(github.ref, github.event.repository.default_branch) }}
       flavor-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
         description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
@@ -160,7 +165,7 @@ jobs:
           # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#cache-backend-api
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          push: true
+          push: ${{ inputs.push }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           # add attestations for provenance and sbom
