@@ -12,6 +12,8 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 1. Easier to start with than hand-building all the Docker Actions into a single workflow.
 2. Provides inline docs based on real-world usage of this workflow.
 3. Gives you inputs so you can reuse this workflow across many repositories and only needing the full workflow stored in a central repository.
+4. New in 2023: Adds [SBOM and Provenance](https://docs.docker.com/build/attestations/) metadata to your images.
+5. New in 2023: [Example template](./templates/call-docker-build-promote.yaml) to use the reusable workflow twice, in a "image promotion" style of dual registries (one for devs and PRs, one for production after PR merges)
 
 ## Steps to adopt this workflow
 
@@ -38,7 +40,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 
 ## More reading
 
-- [Docker Build/Push Action advanced examples](https://github.com/docker/build-push-action/tree/master/docs/advanced)
+- [Docker Build/Push Action docs and examples](https://docs.docker.com/build/ci/github-actions/)
 - [My full list of container examples and tools](https://github.com/bretfisher)
 
 ## 🎉🎉🎉 Join my cloud native DevOps community 🎉🎉🎉
