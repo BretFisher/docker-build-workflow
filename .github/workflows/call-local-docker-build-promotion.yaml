@@ -31,7 +31,7 @@ jobs:
   # run this job on every push to a PR
   # it will push images to GHCR, but not DockerHub
   docker-build-pr:
-    name: Call Docker Build on PR
+    name: Call Build on PR
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/reusable-docker-build.yaml    
     with:  
@@ -44,7 +44,7 @@ jobs:
   # it will push images to GHCR and DockerHub
   # tags will also include ones like `stable-<date>-<sha>` and `latest`
   docker-build-merge:
-    name: Call Docker Build on PR
+    name: Call Build on Push
     if: github.event_name == 'push' && github.event.repository.default_branch
     uses: ./.github/workflows/reusable-docker-build.yaml    
     with:  

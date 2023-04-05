@@ -65,11 +65,17 @@ on:
         description: Use docker-metadata action to create tags from a key-value pair list in CSV format
         required: false
         type: string
+        # this ruleset will create one or more tags for each image in image-names
+        # some fire in pr-only, some in push/merge-only
+        # I still recommend reusable `latest` tag for human-friendly testing (not servers)
+        # I like a full tag for prod images that reads something like `stable-<date>-<commit>`
+        # Tags starting with `gha-<run_id>` are unique to each PR commit, and used to test fresh images
         default: |
-          type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-          type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+          # rules with is_default_branch only create the tag if it's a push/merge to default branch
+          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable={{is_default_branch}}
+          type=raw,value=gha-${{ github.run_id }},enable={{is_default_branch}}
           type=ref,event=pr
-          type=sha,enable=${{ !endsWith(github.ref, github.event.repository.default_branch) }}
       flavor-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
         description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
