@@ -7,9 +7,12 @@ on:
   # to keep this workflow simple, assumptions are made:
     # - only able to push to Docker Hub and/or GHCR (GHCR by default)
     # - adds a comment to PRs of tags and label metadata
-    # - Builds on PR with tag of `prNUMBER` (same tag each PR push)
-    # - Builds on push to default_branch
-    # - Builds on tag push with semver
+    # - you want to use GitHub cache for buildx image layers
+    # - Builds on PR with tag of `pr-NUMBER` (same tag each PR push)
+    # - Builds on push to default_branch will have a unique tag of `stable-YYYYMMDD-SHA`
+    # - Builds on push to default_branch will have a reusable tag of `latest` (useful for easy human testing, not servers)
+    # - Builds on a tag push with semver will also have a reusable tag of `latest` and also a semver tag
+    # - Defaults to only linux/amd64 platform builds, but can build for others in parallel
 
   workflow_call:
     # allow reuse of this workflow in other repos
