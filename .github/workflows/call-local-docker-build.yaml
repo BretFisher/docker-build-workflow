@@ -46,5 +46,4 @@ jobs:
       ghcr-enable: true
 
       image-names: |
-        ${{ github.repository }}
         ghcr.io/${{ github.repository }}
