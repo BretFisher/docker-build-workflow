@@ -21,24 +21,36 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+
 jobs:
 
-  call-docker-build:
-
-    name: Call Docker Build
-
-    uses: ./.github/workflows/reusable-docker-build.yaml
-
-    permissions:
-      contents: read
-      packages: write
-      pull-requests: write
-    
-    with:
-      
+  # run this job on every push to a PR
+  # it will push images to GHCR, but not DockerHub
+  docker-build-pr:
+    name: Call Docker Build on PR
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/reusable-docker-build.yaml    
+    with:  
       dockerhub-enable: false
-      ghcr-enable: false
-      push: false
-
+      ghcr-enable: true
+      push: true
       image-names: |
+        ghcr.io/${{ github.repository }}
+  # run this job on every push to the default branch (including merges)
+  # it will push images to GHCR and DockerHub
+  # tags will also include ones like `stable-<date>-<sha>` and `latest`
+  docker-build-merge:
+    name: Call Docker Build on PR
+    if: github.event_name == 'push' && github.event.repository.default_branch
+    uses: ./.github/workflows/reusable-docker-build.yaml    
+    with:  
+      dockerhub-enable: true
+      ghcr-enable: true
+      push: true
+      image-names: |
+        docker.io/${{ github.repository }}
         ghcr.io/${{ github.repository }}
