@@ -1,0 +1,69 @@
+---
+# template source: https://github.com/bretfisher/docker-build-workflow/blob/main/templates/call-docker-build-promote.yaml
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - main
+    # don't rebuild image if someone only edited unrelated files
+    paths-ignore:
+      - 'README.md'
+      - '.github/linters/**'
+  pull_request:
+    # don't rebuild image if someone only edited unrelated files
+    paths-ignore:
+      - 'README.md'
+      - '.github/linters/**'
+
+# cancel any previously-started, yet still active runs of this workflow on the same branch
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write # needed to push docker image to ghcr.io
+  pull-requests: write # needed to create and update comments in PRs
+
+jobs:
+
+  # run this job on every push to a PR
+  # it will push images to GHCR, but not DockerHub
+  docker-build-pr:
+    name: Call Build on PR
+    if: github.event_name == 'pull_request'
+    # FIXME: fork this repo and update this path to YOUR reusable workflow location
+    uses: bretfisher/docker-build-workflow/.github/workflows/reusable-docker-build.yaml@main
+    with:  
+      # NOTE: there are lots of input options for this reusable workflow
+      # read the comments in the inputs area of the reusable workflow for more info
+      # https://github.com/BretFisher/docker-build-workflow/blob/main/.github/workflows/reusable-docker-build.yaml
+      dockerhub-enable: false
+      ghcr-enable: true
+      push: true
+      image-names: |
+        ghcr.io/${{ github.repository }}
+
+  # run this job on every push to the default branch (including merges and tags)
+  # it will push images to GHCR and DockerHub
+  # tags will also include ones like `stable-<date>-<sha>` and `latest`
+  docker-build-merge:
+    name: Call Build on Push
+    # this if is filtered to only the main branch push event (see events at top)
+    if: github.event_name == 'push'
+    # FIXME: fork this repo and update this path to YOUR reusable workflow location
+    uses: bretfisher/docker-build-workflow/.github/workflows/reusable-docker-build.yaml@main
+    secrets:
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:  
+      # NOTE: there are lots of input options for this reusable workflow
+      # read the comments in the inputs area of the reusable workflow for more info
+      # https://github.com/BretFisher/docker-build-workflow/blob/main/.github/workflows/reusable-docker-build.yaml
+      dockerhub-enable: true
+      ghcr-enable: true
+      push: true
+      image-names: |
+        docker.io/${{ github.repository }}
+        ghcr.io/${{ github.repository }}

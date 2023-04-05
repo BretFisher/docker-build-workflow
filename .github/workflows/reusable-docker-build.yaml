@@ -6,23 +6,17 @@ on:
   # REUSABLE WORKFLOW with INPUTS
   # to keep this workflow simple, assumptions are made:
     # - only able to push to Docker Hub and/or GHCR (GHCR by default)
-    # - Builds on PR with tag of `prNUMBER` (same tag each PR push)
-    # - Builds on push to main branch with tag of `latest`
-    # - Builds on tag push with semver
+    # - adds a comment to PRs of tags and label metadata
+    # - you want to use GitHub cache for buildx image layers
+    # - Builds on PR with tag of `pr-NUMBER` (same tag each PR push)
+    # - Builds on push to default_branch will have a unique tag of `stable-YYYYMMDD-SHA`
+    # - Builds on push to default_branch will have a reusable tag of `latest` (useful for easy human testing, not servers)
+    # - Builds on a tag push with semver will also have a reusable tag of `latest` and also a semver tag
+    # - Defaults to only linux/amd64 platform builds, but can build for others in parallel
 
   workflow_call:
     # allow reuse of this workflow in other repos
     inputs:
-      dockerhub-enable:
-        description: Log into Docker Hub
-        required: false
-        default: false
-        type: boolean
-      ghcr-enable:
-        description: Log into GHCR
-        required: false
-        default: true
-        type: boolean
       comment-enable:
         description: Create a PR comment with image tags and labels
         required: false
@@ -30,48 +24,76 @@ on:
         type: boolean
       context:
         description: Docker context (path) to start build from
+        # To set to a subdir, use format of "{{defaultContext}}:mysubdir"
         required: false
         type: string
-        default: .
+      dockerhub-enable:
+        description: Log into Docker Hub
+        required: false
+        default: false
+        type: boolean
       file:
         description: Dockerfile to build, relative to context path
         required: false
         type: string
-      target:
-        description: Build stage to target
+      flavor-rules:
+        # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
+        description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
         required: false
         type: string
+        # will tag latest on a git tag push, or if you add a type=semver or type=match tag-rules
+        # NOTE: if you are seeing `latest` retagged when you don't expect it, set this latest=false
+        default: |
+            latest=auto
+      ghcr-enable:
+        description: Log into GHCR
+        required: false
+        default: true
+        type: boolean
+      image-names:
+        description: A list of the account/repo names for docker build to push to
+        required: false
+        type: string
+        # this is cool because you can add multiple names to different registries
+        # and docker-build-push step will push to all of them
+        default: |
+          ghcr.io/${{ github.repository }}
       platforms:
         description: Platforms to build for
         required: false
         type: string
         # common ones: linux/amd64,linux/arm64,linux/arm/v7
         default: linux/amd64
-      image-names:
-        description: A list of the account/repo names for docker build
+      push:
+        description: Push image to registry(s)
         required: false
-        type: string
-        default: |
-          ${{ github.repository }}
-          ghcr.io/${{ github.repository }}
+        type: boolean
+        default: true
       tag-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#tags-input
         description: Use docker-metadata action to create tags from a key-value pair list in CSV format
         required: false
         type: string
+        # this ruleset will create one or more tags for each image in image-names
+        # some fire in pr-only, some in push/merge-only
+        # I still recommend reusable `latest` tag for human-friendly testing (not servers)
+        # I like a full tag for prod images that reads something like `stable-<date>-<commit>`
+        # Tags starting with `gha-<run_id>` are unique to each PR commit, and used to test fresh images      # rules with is_default_branch only create the tag if it's a push/merge to default branch
+        # priority attribute is used to sort tags in the final list. The higher the value, 
+        #   the higher the priority. The first tag in the list (higher priority) will be used as 
+        #   the image version for generated OCI label and version output.
         default: |
-          type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-          type=raw,value=stable-{{date 'YYYYMMDDHHmmss'}},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-          type=ref,event=pr
-          type=raw,value=gha-${{ github.run_id }}
-      flavor-rules:
-        # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
-        description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
+          type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable={{is_default_branch}},priority=300
+          type=ref,event=tag,priority=200
+          type=raw,value=latest,enable={{is_default_branch}},priority=100
+          type=raw,value=gha-${{ github.run_id }},enable=${{github.event_name == 'pull_request'}},priority=200
+          type=ref,event=pr,priority=100
+      target:
+        description: Build stage to target
         required: false
         type: string
-        default: |
-            latest=false
-
+      
+   
     secrets:
       dockerhub-username:
         description: Docker Hub username
@@ -103,13 +125,10 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      # only outputs the unique gha- image tag that's unique to each build
+      # only outputs the unique gha- image tag that's unique to each GHA run
       ghcr-tag: ${{ steps.ghcr-tag.outputs.tag }}
 
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3.5.0
       -
         # we need qemu and buildx so we can build multiple platforms later
         name: Set up QEMU
@@ -147,6 +166,8 @@ jobs:
       -
         # this will build the images, once per platform,
         # then push to one or more registries (based on image list above in docker_meta)
+        # NOTE: this will not push if a PR is from a fork, where secrets are not available
+        # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
         name: Docker Build and Push
         id: build_image
         uses: docker/build-push-action@v4.0.0
@@ -160,10 +181,12 @@ jobs:
           # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#cache-backend-api
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          push: true
+          push: ${{ inputs.push }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          # add attestations for provenance and sbom
+          # add attestations for provenance and sbom (bleeding edge BuildKit features)
+          # NOTE: for now, this reults in `unknown/unknown` images in all registries but Hub
+          # https://docs.docker.com/build/attestations/attestation-storage/
           provenance: true
           sbom: true
       -
@@ -200,6 +223,5 @@ jobs:
       - name: Find the gha-run-based image tag we just pushed to ghcr.io
         id: ghcr-tag
         run: |
-          echo '::echo::on'
           # shellcheck disable=SC2086
           echo "tag=gha-${{ github.run_id }}" >> $GITHUB_OUTPUT

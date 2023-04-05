@@ -1,15 +1,19 @@
-# Docker Build and Push GitHub Actions Workflow
+# Template Repo: Docker Build and Push GitHub Actions Workflow
 
 [![Lint Code Base](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-super-linter.yaml/badge.svg)](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-super-linter.yaml)
 [![Docker Build](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-local-docker-build.yaml/badge.svg)](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-local-docker-build.yaml)
 
 A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings from production use.
 
+> ⚠️ **DO NOT call this workflow directly**, rather, use it as a template repo and fork it for your own reusable workflow. I might change this workflow at anytime, based on new GHA features or learnings, and your calling workflow might break. ⚠️
+
 ## Reasons to use this workflow
 
 1. Easier to start with than hand-building all the Docker Actions into a single workflow.
 2. Provides inline docs based on real-world usage of this workflow.
 3. Gives you inputs so you can reuse this workflow across many repositories and only needing the full workflow stored in a central repository.
+4. New in 2023: Adds [SBOM and Provenance](https://docs.docker.com/build/attestations/) metadata to your images.
+5. New in 2023: [Example template](./templates/call-docker-build-promote.yaml) to use the reusable workflow twice, in a "image promotion" style of dual registries (one for devs and PRs, one for production after PR merges)
 
 ## Steps to adopt this workflow
 
@@ -36,10 +40,10 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 
 ## More reading
 
-- [Docker Build/Push Action advanced examples](https://github.com/docker/build-push-action/tree/master/docs/advanced)
+- [Docker Build/Push Action docs and examples](https://docs.docker.com/build/ci/github-actions/)
 - [My full list of container examples and tools](https://github.com/bretfisher)
 
-## 🎉🎉🎉 Join my container DevOps community 🎉🎉🎉
+## 🎉🎉🎉 Join my cloud native DevOps community 🎉🎉🎉
 
 - [My Cloud Native DevOps Discord server](https://devops.fan)
 - [My weekly YouTube Live show](https://www.youtube.com/@BretFisher)
