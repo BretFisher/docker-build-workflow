@@ -57,7 +57,8 @@ on:
         description: A list of the account/repo names for docker build to push to
         required: false
         type: string
-        # NOTE: github.repository variable will fail on push if your org/repo has capital letters
+        # this is cool because you can add multiple names to different registries
+        # and docker-build-push step will push to all of them
         default: |
           ghcr.io/${{ github.repository }}
       tag-rules:
@@ -72,17 +73,20 @@ on:
         # Tags starting with `gha-<run_id>` are unique to each PR commit, and used to test fresh images
         default: |
           # rules with is_default_branch only create the tag if it's a push/merge to default branch
-          type=raw,value=latest,enable={{is_default_branch}}
-          type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable={{is_default_branch}}
-          type=raw,value=gha-${{ github.run_id }},enable={{is_default_branch}}
-          type=ref,event=pr
+          type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable={{is_default_branch}},priority=300
+          type=ref,event=tag,priority=200
+          type=raw,value=latest,enable={{is_default_branch}},priority=100
+          type=raw,value=gha-${{ github.run_id }},enable=${{github.event_name == 'pull_request'}},priority=200
+          type=ref,event=pr,priority=100
       flavor-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
         description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
         required: false
         type: string
+        # will tag latest on a git tag push, or if you add a type=semver or type=match tag-rules
+        # NOTE: if you are seeing `latest` retagged when you don't expect it, set this latest=false
         default: |
-            latest=false
+            latest=auto
 
     secrets:
       dockerhub-username:
@@ -115,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      # only outputs the unique gha- image tag that's unique to each build
+      # only outputs the unique gha- image tag that's unique to each GHA run
       ghcr-tag: ${{ steps.ghcr-tag.outputs.tag }}
 
     steps:
@@ -211,6 +215,5 @@ jobs:
       - name: Find the gha-run-based image tag we just pushed to ghcr.io
         id: ghcr-tag
         run: |
-          echo '::echo::on'
           # shellcheck disable=SC2086
           echo "tag=gha-${{ github.run_id }}" >> $GITHUB_OUTPUT
