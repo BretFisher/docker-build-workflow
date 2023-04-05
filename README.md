@@ -1,9 +1,11 @@
-# Docker Build and Push GitHub Actions Workflow
+# Template Repo: Docker Build and Push GitHub Actions Workflow
 
 [![Lint Code Base](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-super-linter.yaml/badge.svg)](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-super-linter.yaml)
 [![Docker Build](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-local-docker-build.yaml/badge.svg)](https://github.com/BretFisher/docker-build-workflow/actions/workflows/call-local-docker-build.yaml)
 
 A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings from production use.
+
+> ⚠️ **DO NOT call this workflow directly**, rather, use it as a template repo and fork it for your own reusable workflow. I might change this workflow at anytime, based on new GHA features or learnings, and your calling workflow might break. ⚠️
 
 ## Reasons to use this workflow
 
@@ -39,7 +41,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 - [Docker Build/Push Action advanced examples](https://github.com/docker/build-push-action/tree/master/docs/advanced)
 - [My full list of container examples and tools](https://github.com/bretfisher)
 
-## 🎉🎉🎉 Join my container DevOps community 🎉🎉🎉
+## 🎉🎉🎉 Join my cloud native DevOps community 🎉🎉🎉
 
 - [My Cloud Native DevOps Discord server](https://devops.fan)
 - [My weekly YouTube Live show](https://www.youtube.com/@BretFisher)

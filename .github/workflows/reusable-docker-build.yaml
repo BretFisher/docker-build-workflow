@@ -32,7 +32,8 @@ on:
         description: Docker context (path) to start build from
         required: false
         type: string
-        default: .
+        # To set to a subdir, use format of "{{defaultContext}}:mysubdir"
+        default: "{{defaultContext}}"
       file:
         description: Dockerfile to build, relative to context path
         required: false
@@ -48,11 +49,11 @@ on:
         # common ones: linux/amd64,linux/arm64,linux/arm/v7
         default: linux/amd64
       image-names:
-        description: A list of the account/repo names for docker build
+        description: A list of the account/repo names for docker build to push to
         required: false
         type: string
+        # NOTE: github.repository variable will fail on push if your org/repo has capital letters
         default: |
-          ${{ github.repository }}
           ghcr.io/${{ github.repository }}
       tag-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#tags-input
@@ -147,6 +148,8 @@ jobs:
       -
         # this will build the images, once per platform,
         # then push to one or more registries (based on image list above in docker_meta)
+        # NOTE: this will not push if a PR is from a fork, where secrets are not available
+        # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
         name: Docker Build and Push
         id: build_image
         uses: docker/build-push-action@v4.0.0
