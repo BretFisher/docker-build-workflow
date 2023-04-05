@@ -6,23 +6,14 @@ on:
   # REUSABLE WORKFLOW with INPUTS
   # to keep this workflow simple, assumptions are made:
     # - only able to push to Docker Hub and/or GHCR (GHCR by default)
+    # - adds a comment to PRs of tags and label metadata
     # - Builds on PR with tag of `prNUMBER` (same tag each PR push)
-    # - Builds on push to main branch with tag of `latest`
+    # - Builds on push to default_branch
     # - Builds on tag push with semver
 
   workflow_call:
     # allow reuse of this workflow in other repos
     inputs:
-      dockerhub-enable:
-        description: Log into Docker Hub
-        required: false
-        default: false
-        type: boolean
-      ghcr-enable:
-        description: Log into GHCR
-        required: false
-        default: true
-        type: boolean
       comment-enable:
         description: Create a PR comment with image tags and labels
         required: false
@@ -30,18 +21,40 @@ on:
         type: boolean
       context:
         description: Docker context (path) to start build from
+        # To set to a subdir, use format of "{{defaultContext}}:mysubdir"
         required: false
         type: string
-        # To set to a subdir, use format of "{{defaultContext}}:mysubdir"
-        default: "{{defaultContext}}"
+      dockerhub-enable:
+        description: Log into Docker Hub
+        required: false
+        default: false
+        type: boolean
       file:
         description: Dockerfile to build, relative to context path
         required: false
         type: string
-      target:
-        description: Build stage to target
+      flavor-rules:
+        # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
+        description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
         required: false
         type: string
+        # will tag latest on a git tag push, or if you add a type=semver or type=match tag-rules
+        # NOTE: if you are seeing `latest` retagged when you don't expect it, set this latest=false
+        default: |
+            latest=auto
+      ghcr-enable:
+        description: Log into GHCR
+        required: false
+        default: true
+        type: boolean
+      image-names:
+        description: A list of the account/repo names for docker build to push to
+        required: false
+        type: string
+        # this is cool because you can add multiple names to different registries
+        # and docker-build-push step will push to all of them
+        default: |
+          ghcr.io/${{ github.repository }}
       platforms:
         description: Platforms to build for
         required: false
@@ -53,14 +66,6 @@ on:
         required: false
         type: boolean
         default: true
-      image-names:
-        description: A list of the account/repo names for docker build to push to
-        required: false
-        type: string
-        # this is cool because you can add multiple names to different registries
-        # and docker-build-push step will push to all of them
-        default: |
-          ghcr.io/${{ github.repository }}
       tag-rules:
         # https://github.com/marketplace/actions/docker-metadata-action#tags-input
         description: Use docker-metadata action to create tags from a key-value pair list in CSV format
@@ -70,24 +75,22 @@ on:
         # some fire in pr-only, some in push/merge-only
         # I still recommend reusable `latest` tag for human-friendly testing (not servers)
         # I like a full tag for prod images that reads something like `stable-<date>-<commit>`
-        # Tags starting with `gha-<run_id>` are unique to each PR commit, and used to test fresh images
+        # Tags starting with `gha-<run_id>` are unique to each PR commit, and used to test fresh images      # rules with is_default_branch only create the tag if it's a push/merge to default branch
+        # priority attribute is used to sort tags in the final list. The higher the value, 
+        #   the higher the priority. The first tag in the list (higher priority) will be used as 
+        #   the image version for generated OCI label and version output.
         default: |
-          # rules with is_default_branch only create the tag if it's a push/merge to default branch
           type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable={{is_default_branch}},priority=300
           type=ref,event=tag,priority=200
           type=raw,value=latest,enable={{is_default_branch}},priority=100
           type=raw,value=gha-${{ github.run_id }},enable=${{github.event_name == 'pull_request'}},priority=200
           type=ref,event=pr,priority=100
-      flavor-rules:
-        # https://github.com/marketplace/actions/docker-metadata-action#flavor-input
-        description: Three rules to (optionally) set for tag-rules, latest, prefix, and suffix
+      target:
+        description: Build stage to target
         required: false
         type: string
-        # will tag latest on a git tag push, or if you add a type=semver or type=match tag-rules
-        # NOTE: if you are seeing `latest` retagged when you don't expect it, set this latest=false
-        default: |
-            latest=auto
-
+      
+   
     secrets:
       dockerhub-username:
         description: Docker Hub username

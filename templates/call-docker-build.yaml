@@ -38,52 +38,34 @@ jobs:
 
       # Only needed if with:dockerhub-enable is true below
       # https://hub.docker.com/settings/security
-      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+      # dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      # dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
 
     with:
       
-      ### REQUIRED
-      ### ENABLE ONE OR BOTH REGISTRIES
-      ### tell docker where to push.
-      ### NOTE if Docker Hub is set to true, you must set secrets above and also add account/repo/tags below
-      ### defaults to:
+      # NOTE: there are lots of input options for this reusable workflow
+      # read the comments in the inputs area of the reusable workflow for more info
+      # https://github.com/BretFisher/docker-build-workflow/blob/main/.github/workflows/reusable-docker-build.yaml
+
+      # Here are just a few of the common defaults
+
       # dockerhub-enable: false
       # ghcr-enable: true
 
-      ### A list of the account/repo names for docker build. List should match what's enabled above
-      ### the first default assumes your Docker Hub repo is the same org/repo name as your GitHub repo
-      ### NOTE: these defaults will fail unless your github org/repo are all lower case
-      ### defaults to:
       # image-names: |
       #   ghcr.io/${{ github.repository }}
 
-      ### set rules for tagging images, based on special action syntax:
-      ### https://github.com/docker/metadata-action#tags-input
-      ### defaults to:
-      #tag-rules: |
-      #  type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-      #  type=raw,value=stable-{{date 'YYYYMMDDHHmmss'}},enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-      #  type=ref,event=pr
-      #  type=ref,event=branch
-      #  type=raw,value=gha-${{ github.run_id }}
-      
-      ### path to where docker should copy files into image
-      ### For subdirectories (e.g. monorepos), use "{{defaultContext}}:mysubdir"
-      ### defaults to root of repository
+      # tag-rules: |
+      #   type=raw,value=stable-{{date 'YYYYMMDD'}}-{{sha}},enable={{is_default_branch}},priority=300
+      #   type=ref,event=tag,priority=200
+      #   type=raw,value=latest,enable={{is_default_branch}},priority=100
+      #   type=raw,value=gha-${{ github.run_id }},enable=${{github.event_name == 'pull_request'}},priority=200
+      #   type=ref,event=pr,priority=100
+
       # context: "{{defaultContext}}"
       
-      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
-      # file: Containerfile
-
-      ### build stage to target, defaults to empty, which builds to last stage in Dockerfile
       # target:
       
-      ### platforms to build for
-      ### defaults to linux/amd64
-      ### other options: linux/amd64,linux/arm64,linux/arm/v7
       # platforms: linux/amd64
       
-      ### Create a PR comment with image tags and labels
-      ### defaults to true
-      # comment-enable: false
+      # comment-enable: true
