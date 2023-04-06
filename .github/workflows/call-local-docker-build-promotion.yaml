@@ -41,6 +41,15 @@ jobs:
       image-names: |
         ghcr.io/${{ github.repository }}
 
+  gitops-pr:
+    name: GitOps PR
+    if: github.event_name == 'pull_request'
+    needs: docker-build-pr
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "ghcr.io/${{ github.repository }}:${{ needs.docker-build-pr.outputs.image-tag }}"
+
+
   # run this job on every push to the default branch (including merges and tags)
   # it will push images to GHCR and DockerHub
   # tags will also include ones like `stable-<date>-<sha>` and `latest`
