@@ -50,7 +50,7 @@ jobs:
       - name: Checkout MostlyDevOps/wordsmith-k8s
         uses: actions/checkout@v3
         with:
-          ref: MostlyDevOps/wordsmith-k8s
+          repository: MostlyDevOps/wordsmith-k8s
           token: ${{ secrets.GITOPS_TOKEN }}
           # path: gitops-pr
 
