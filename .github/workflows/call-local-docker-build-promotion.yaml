@@ -52,24 +52,23 @@ jobs:
         with:
           repository: MostlyDevOps/wordsmith-k8s
           token: ${{ secrets.GITOPS_TOKEN }}
-          # path: gitops-pr
 
       - name: Change image tag in kustomization.yaml
         run: |
-          echo $PWD
-          ls -al
           cd environments/staging01
           kustomize edit set image "ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
 
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITOPS_TOKEN }}
           commit-message: "Update image for ${{ github.repository }} env staging01"
-          title: "Auto PR for env staging01 to ${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
-          body: "Update image tag of file `./environments/staging01/kustomization.yaml` to `ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}`"
+          title: "Env staging01 image update: ${{ github.repository }}:${{ needs.docker-build-pr.outputs.image-tag }}"
+          body: "Update image tag of file `./environments/staging01/kustomization.yaml` to `ghcr.io/${{ github.repository }}:${{ needs.docker-build-pr.outputs.image-tag }}`"
           branch: "${{ needs.docker-build-pr.outputs.image-tag }}"
-          # path: gitops-pr
+
+      # TODO: echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
       
       # - name: Post to a Slack channel
       #   id: slack
