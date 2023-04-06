@@ -52,13 +52,13 @@ jobs:
         with:
           ref: MostlyDevOps/wordsmith-k8s
           token: ${{ secrets.GITOPS_TOKEN }}
-          path: gitops-pr
+          # path: gitops-pr
 
       - name: Change image tag in kustomization.yaml
         run: |
           echo $PWD
           ls -al
-          cd gitops-pr/environments/staging01
+          cd environments/staging01
           kustomize edit set image "ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
 
       - name: Create Pull Request
@@ -69,7 +69,7 @@ jobs:
           title: "Auto PR for env staging01 to ${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
           body: "Update image tag of file `./environments/staging01/kustomization.yaml` to `ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}`"
           branch: "${{ needs.docker-build-pr.outputs.image-tag }}"
-          path: gitops-pr
+          # path: gitops-pr
       
       # - name: Post to a Slack channel
       #   id: slack
