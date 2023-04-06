@@ -47,7 +47,39 @@ jobs:
     needs: docker-build-pr
     runs-on: ubuntu-latest
     steps:
-      - run: echo "ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
+      - name: Checkout MostlyDevOps/wordsmith-k8s
+        uses: actions/checkout@v3
+        with:
+          ref: MostlyDevOps/wordsmith-k8s
+          token: ${{ secrets.GITOPS_TOKEN }}
+          path: gitops-pr
+
+      - name: Change image tag in kustomization.yaml
+        run: |
+          echo $PWD
+          ls -al
+          cd gitops-pr/environments/staging01
+          kustomize edit set image "ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITOPS_TOKEN }}
+          commit-message: "Update image for ${{ github.repository }} env staging01"
+          title: "Auto PR for env staging01 to ${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
+          body: "Update image tag of file `./environments/staging01/kustomization.yaml` to `ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}`"
+          branch: "${{ needs.docker-build-pr.outputs.image-tag }}"
+          path: gitops-pr
+      
+      # - name: Post to a Slack channel
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     channel-id: 'CHANNEL_ID'
+      #     slack-message: "New GitOps PR created for env XXX with image `ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}`"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    
 
 
   # run this job on every push to the default branch (including merges and tags)
