@@ -57,6 +57,7 @@ jobs:
         run: |
           cd environments/staging01
           kustomize edit set image "ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
+          cat kustomization.yaml
 
       - name: Create Pull Request
         id: cpr
