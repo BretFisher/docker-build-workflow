@@ -47,7 +47,7 @@ jobs:
     needs: docker-build-pr
     runs-on: ubuntu-latest
     steps:
-      - run: echo "ghcr.io/${{ github.repository }}:${{ needs.docker-build-pr.outputs.image-tag }}"
+      - run: echo "ghcr.io/${GITHUB_REPOSITORY,,}:${{ needs.docker-build-pr.outputs.image-tag }}"
 
 
   # run this job on every push to the default branch (including merges and tags)
