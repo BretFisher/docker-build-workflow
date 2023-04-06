@@ -203,7 +203,7 @@ jobs:
       
         # If PR, put image tags in the PR comments
       - name: Create or update comment for image tags
-        uses: peter-evans/create-or-update-comment@v2.1.1
+        uses: peter-evans/create-or-update-comment@v3.0.0
         if: github.event_name == 'pull_request' && inputs.comment-enable
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
