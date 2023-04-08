@@ -78,7 +78,7 @@ jobs:
       - name: Change image tag in kustomization.yaml
         run: |
           cd ${{ inputs.kustomize-path }}
-          kustomize edit set image "${'${{ inputs.image }}',,}:${{ inputs.tag }}"
+          kustomize edit set image "${echo '${{ inputs.image }}' | tr '[:upper:]' '[:lower:]'}:${{ inputs.tag }}"
           cat kustomization.yaml
 
       - name: Create Pull Request
