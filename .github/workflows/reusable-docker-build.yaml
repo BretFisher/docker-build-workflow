@@ -92,7 +92,6 @@ on:
         description: Build stage to target
         required: false
         type: string
-      
    
     secrets:
       dockerhub-username:
@@ -106,7 +105,6 @@ on:
       image-tag:
         description: "single-use image tag for GHA runs"
         value: ${{ jobs.build-image.outputs.image-tag }}
-
 
 # permissions: GITHUB_TOKEN are better set by the **calling** workflow
 # but we'll set defaults here for reference
@@ -129,33 +127,33 @@ jobs:
       image-tag: ${{ steps.image-tag.outputs.image-tag }}
 
     steps:
-      -
+
         # we need qemu and buildx so we can build multiple platforms later
-        name: Set up QEMU
+      - name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v2.1.0
-      -
+
         # BuildKit (used with `docker buildx`) is the best way to build images
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v2.5.0
-      -
-        name: Login to DockerHub
+
+      - name: Login to DockerHub
         if: inputs.dockerhub-enable
         uses: docker/login-action@v2.1.0
         with:
           username: ${{ secrets.dockerhub-username }}
           password: ${{ secrets.dockerhub-token }}
-      -
-        name: Login to GHCR
+
+      - name: Login to GHCR
         if: inputs.ghcr-enable
         uses: docker/login-action@v2.1.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Docker meta
+
+      - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@v4.3.0
         with:
@@ -163,12 +161,12 @@ jobs:
           images: ${{ inputs.image-names }}
           flavor: ${{ inputs.flavor-rules }}
           tags: ${{ inputs.tag-rules }}
-      -
+
         # this will build the images, once per platform,
         # then push to one or more registries (based on image list above in docker_meta)
         # NOTE: this will not push if a PR is from a fork, where secrets are not available
         # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
-        name: Docker Build and Push
+      - name: Docker Build and Push
         id: build_image
         uses: docker/build-push-action@v4.0.0
         with:
@@ -189,10 +187,10 @@ jobs:
           # https://docs.docker.com/build/attestations/attestation-storage/
           provenance: true
           sbom: true
-      -
+
         # If PR, put image tags in the PR comments
         # from https://github.com/marketplace/actions/create-or-update-comment
-        name: Find comment for image tags
+      - name: Find comment for image tags
         uses: peter-evans/find-comment@v2.3.0
         if: github.event_name == 'pull_request' && inputs.comment-enable
         id: fc
