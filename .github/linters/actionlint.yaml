@@ -1,0 +1,2 @@
+config-variables:
+  - SLACK_CHANNEL_ID
