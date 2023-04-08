@@ -72,8 +72,8 @@ jobs:
   # You could also change this to update a Helm chart values file.
   gitops-pr:
     name: GitOps PR
-    if: github.event_name == 'push'
-    needs: docker-build-merge
+    if: github.event_name == 'pull_request'
+    needs: docker-build-pr
     uses: ./.github/workflows/reusable-gitops-pr.yaml
     secrets:
       github-token: ${{ secrets.GITOPS_TOKEN }}
