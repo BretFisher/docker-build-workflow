@@ -54,7 +54,7 @@ on:
 # permissions: GITHUB_TOKEN are better set by the **calling** workflow
 # but we'll set defaults here for reference
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idpermissions
-permissions: { }
+permissions: write-all
 
 jobs:
   gitops-pr:
