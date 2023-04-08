@@ -85,7 +85,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.github_token }}
+          token: ${{ secrets.github-token }}
           commit-message: "Update image for ${{ inputs.kustomize-path }}"
           title: "${{ inputs.kustomize-path }} image update to: ${{ inputs.image }}:${{ inputs.tag }}"
           body: "Update image tag of file `${{ inputs.kustomize-path }}/kustomization.yaml` to `${{ inputs.image }}:${{ inputs.tag }}`"
