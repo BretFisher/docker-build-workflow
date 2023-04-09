@@ -30,6 +30,17 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 6. Build and push image via docker/build-push-action with GitHub-based layer caching
 7. Reports tags and labels in the PR comments
 
+## What other ways can I use this workflow?
+
+I have a more advanced example of using this reusable workflow to do a "promotion" style workflow of:
+
+1. On PR creation, build and push to a "dev" registry (GHCR)
+2. On PR merge, build and push to a "prod" registry (Docker Hub)
+3. Create a GitOps YAML update PR to update image tags
+4. Notify of GitOps PR creation in Slack
+
+I've added that example to my [github-actions-templates](https://github.com/BretFisher/github-actions-templates) repo.
+
 ## This repository is part of my example DevOps repos on GitHub Actions
 
 - [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main reusable templates repository
