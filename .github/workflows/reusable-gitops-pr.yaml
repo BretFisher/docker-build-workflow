@@ -97,18 +97,6 @@ jobs:
         uses: slackapi/slack-github-action@v1
         with:
           channel-id: ${{ inputs.slack-channel-id }}
-          payload: |
-            {
-              "text": "PR created ${{ steps.cpr.outputs.pull-request-url }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "PR [#${{ steps.cpr.outputs.pull-request-number }}](${{ steps.cpr.outputs.pull-request-url }}) created"
-                  }
-                }
-              ]
-            }
+          slack-message: "PR created ${{ steps.cpr.outputs.pull-request-url }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack-token }}
