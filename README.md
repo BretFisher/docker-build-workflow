@@ -5,7 +5,7 @@
 
 A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings from production use.
 
-> ⚠️ **DO NOT call this workflow directly**, rather, use it as a template repo and fork it for your own reusable workflow. I might change this workflow at anytime, based on new GHA features or learnings, and your calling workflow might break. ⚠️
+> ⚠️ **DO NOT call this workflow directly**, rather, use it as a template repository and fork it for your own reusable workflow. I might change this workflow at anytime, based on new GHA features or learnings, and your calling workflow might break. ⚠️
 
 ## Reasons to use this workflow
 
@@ -39,9 +39,9 @@ I have a more advanced example of using this reusable workflow to do a "promotio
 3. Create a GitOps YAML update PR to update image tags
 4. Notify of GitOps PR creation in Slack
 
-I've added that example to my [github-actions-templates](https://github.com/BretFisher/github-actions-templates) repo.
+I've added that example to my [github-actions-templates](https://github.com/BretFisher/github-actions-templates) repository. It calls the reusable `reusable-docker-build.yaml` file in this repository.
 
-## This repository is part of my example DevOps repos on GitHub Actions
+## This repository is part of my example DevOps repositories on GitHub Actions
 
 - [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main reusable templates repository
 - [bretfisher/super-linter-workflow](https://github.com/BretFisher/super-linter-workflow) - Reusable linter workflow
