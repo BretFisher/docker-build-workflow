@@ -13,17 +13,17 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 2. Provides inline docs based on real-world usage of this workflow.
 3. Gives you inputs so you can reuse this workflow across many repositories and only needing the full workflow stored in a central repository.
 4. New in 2023: Adds [SBOM and Provenance](https://docs.docker.com/build/attestations/) metadata to your images.
-5. New in 2023: [Example template](./templates/call-docker-build-promote.yaml) to use the reusable workflow twice, in a "image promotion" style of dual registries (one for devs and PRs, one for production after PR merges)
+5. New in 2023: [Example template](./templates/call-docker-build-promote.yaml) to use the reusable workflow twice, in an "image promotion" style of dual registries (one for devs and PRs, one for production after PR merges)
 
 ## Steps to adopt this workflow
 
 1. Fork this repository and tweak the reusable workflow to your liking: [.github/workflows/reusable-docker-build.yaml](.github/workflows/reusable-docker-build.yaml)
-2. Copy my "calling" workflow [`templates/call-docker-build.yaml`](templates/call-docker-build.yaml) to all the repos you want to build images in, and change it to point to the forked workflow above.
+2. Copy my "calling" workflow [`templates/call-docker-build.yaml`](templates/call-docker-build.yaml) to all the repositories you want to build images in and change it to point to the forked workflow above.
 
 ## "But what does this workflow really do beyond just `docker build`?"
 
 1. Clone the repository
-2. Setup QEMU for multi-platform building (buildx) via docker/setup-qemu-action
+2. Setup QEMU for multi-platform building (via buildx) via docker/setup-qemu-action
 3. Setup buildx for awesome and fast building via docker/setup-buildx-action
 4. Log into Docker Hub and/or GHCR
 5. Add labels and tags via docker/metadata-action
@@ -46,7 +46,7 @@ I've added that example to my [github-actions-templates](https://github.com/Bret
 - [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main reusable templates repository
 - [bretfisher/super-linter-workflow](https://github.com/BretFisher/super-linter-workflow) - Reusable linter workflow
 - (you are here) [bretfisher/docker-build-workflow](https://github.com/BretFisher/docker-build-workflow)- Reusable docker build workflow
-- [bretfisher/docker-ci-automation](https://github.com/BretFisher/docker-ci-automation) - Step by step video and example of a Docker CI workflow
+- [bretfisher/docker-ci-automation](https://github.com/BretFisher/docker-ci-automation) - Step-by-step video and example of a Docker CI workflow
 - [My full list of container examples and tools](https://github.com/bretfisher)
 
 ## More reading
