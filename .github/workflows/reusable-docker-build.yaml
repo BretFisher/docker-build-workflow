@@ -106,8 +106,9 @@ on:
         description: "single-use image tag for GHA runs"
         value: ${{ jobs.build-image.outputs.image-tag }}
 
-# permissions: GITHUB_TOKEN are better set by the **calling** workflow
-# but we'll set defaults here for reference
+# set permissions here for what's required to run this Reusable Workflow
+# However, permisions are set in the GITHUB_TOKEN by the **calling** workflow
+# Calling permissions must be equal to or greater than these reusable permissions for it to work
 # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
 
 permissions:
