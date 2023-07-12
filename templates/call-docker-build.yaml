@@ -29,6 +29,10 @@ jobs:
     # FIXME: fork this repo and update this path to YOUR reusable workflow location
     uses: bretfisher/docker-build-workflow/.github/workflows/reusable-docker-build.yaml@main
 
+    # set permissions here to be equal or greater than what's required in the Reusable Workflow
+    # Permisions set here for the GITHUB_TOKEN are then passed to the Reusable Workflow
+    # Calling permissions must be equal to or greater than these reusable permissions for it to work
+    # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
     permissions:
       contents: read
       packages: write # needed to push docker image to ghcr.io
