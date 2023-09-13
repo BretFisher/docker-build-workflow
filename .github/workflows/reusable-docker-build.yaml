@@ -156,7 +156,7 @@ jobs:
 
       - name: Docker meta
         id: docker_meta
-        uses: docker/metadata-action@v4.6.0
+        uses: docker/metadata-action@v5.0.0
         with:
           # list of Docker images to use as base name for tags
           images: ${{ inputs.image-names }}
