@@ -141,14 +141,14 @@ jobs:
 
       - name: Login to DockerHub
         if: inputs.dockerhub-enable
-        uses: docker/login-action@v2.2.0
+        uses: docker/login-action@v3.0.0
         with:
           username: ${{ secrets.dockerhub-username }}
           password: ${{ secrets.dockerhub-token }}
 
       - name: Login to GHCR
         if: inputs.ghcr-enable
-        uses: docker/login-action@v2.2.0
+        uses: docker/login-action@v3.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
