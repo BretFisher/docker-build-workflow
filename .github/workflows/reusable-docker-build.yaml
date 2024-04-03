@@ -192,7 +192,7 @@ jobs:
         # If PR, put image tags in the PR comments
         # from https://github.com/marketplace/actions/create-or-update-comment
       - name: Find comment for image tags
-        uses: peter-evans/find-comment@v3.0.0
+        uses: peter-evans/find-comment@v3.1.0
         if: github.event_name == 'pull_request' && inputs.comment-enable
         id: fc
         with:
