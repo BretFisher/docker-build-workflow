@@ -169,7 +169,7 @@ jobs:
         # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
       - name: Docker Build and Push
         id: build_image
-        uses: docker/build-push-action@v5.3.0
+        uses: docker/build-push-action@v5.4.0
         with:
           platforms: ${{ inputs.platforms }}
           context: ${{ inputs.context }}
