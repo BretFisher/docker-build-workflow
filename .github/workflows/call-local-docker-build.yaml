@@ -42,6 +42,6 @@ jobs:
       ghcr-enable: true
 
       image-names: |
-        ghcr.io/${{ github.repository }}
+        ghcr.io/bretfisher/docker-build-workflow
 
       platforms: '["linux/amd64", "linux/arm64"]'
