@@ -184,7 +184,7 @@ jobs:
           # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#cache-backend-api
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.docker_meta.outputs.tags }}
+          tags: ${{ inputs.image-names }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           # add attestations for provenance and sbom (bleeding edge BuildKit features)
           # NOTE: for now, this reults in `unknown/unknown` images in all registries but Hub
