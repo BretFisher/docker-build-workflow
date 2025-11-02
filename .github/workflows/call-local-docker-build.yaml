@@ -21,16 +21,16 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+
 jobs:
   call-docker-build:
     name: Call Docker Build
 
     uses: ./.github/workflows/reusable-docker-build.yaml
-
-    permissions:
-      contents: read
-      packages: write
-      pull-requests: write
 
     secrets:
       dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
