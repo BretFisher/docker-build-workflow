@@ -126,11 +126,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          platform="${{ matrix.platform }}"
+          platform="${MATRIX_PLATFORM}"
           printf 'PLATFORM_PAIR=%s\n' "${platform//\//-}" >> "$GITHUB_ENV"
-          image="${{ inputs.image-names }}"
+          image="${INPUTS_IMAGE_NAMES}"
           printf 'REGISTRY_IMAGE=%s\n' "${image,,}" >> "$GITHUB_ENV"
           printf 'Building for platform: %s\n' "$platform"
+        env:
+          MATRIX_PLATFORM: ${{ matrix.platform }}
+          INPUTS_IMAGE_NAMES: ${{ inputs.image-names }}
 
         # BuildKit (used with `docker buildx`) is the best way to build images
       - name: Set up Docker Buildx
@@ -188,8 +191,10 @@ jobs:
       - name: Export digest
         run: |
           mkdir -p "${{ runner.temp }}/digests"
-          digest="${{ steps.build_image.outputs.digest }}"
+          digest="${STEPS_BUILD_IMAGE_OUTPUTS_DIGEST}"
           touch "${{ runner.temp }}/digests/${digest#sha256:}"
+        env:
+          STEPS_BUILD_IMAGE_OUTPUTS_DIGEST: ${{ steps.build_image.outputs.digest }}
 
       - name: Upload digest
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
@@ -212,8 +217,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          image="${{ inputs.image-names }}"
+          image="${INPUTS_IMAGE_NAMES}"
           printf 'REGISTRY_IMAGE=%s\n' "${image,,}" >> "$GITHUB_ENV"
+        env:
+          INPUTS_IMAGE_NAMES: ${{ inputs.image-names }}
 
       - name: Download digests
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 #v4.3.0
@@ -262,11 +269,13 @@ jobs:
         run: |
           # shellcheck disable=SC2046
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
+            $(printf '${REGISTRY_IMAGE}@sha256:%s ' *)
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect "${{ env.REGISTRY_IMAGE }}:${{ steps.docker_meta.outputs.version }}"
+          docker buildx imagetools inspect "${REGISTRY_IMAGE}:${STEPS_DOCKER_META_OUTPUTS_VERSION}"
+        env:
+          STEPS_DOCKER_META_OUTPUTS_VERSION: ${{ steps.docker_meta.outputs.version }}
 
         # If PR, put image tags in the PR comments
         # from https://github.com/marketplace/actions/create-or-update-comment
@@ -307,4 +316,6 @@ jobs:
         id: image-tag
         run: |
           # shellcheck disable=SC2086
-          echo "image-tag=${{ steps.docker_meta.outputs.version }}" >> $GITHUB_OUTPUT
+          echo "image-tag=${STEPS_DOCKER_META_OUTPUTS_VERSION}" >> $GITHUB_OUTPUT
+        env:
+          STEPS_DOCKER_META_OUTPUTS_VERSION: ${{ steps.docker_meta.outputs.version }}
