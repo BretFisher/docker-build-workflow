@@ -269,7 +269,7 @@ jobs:
         run: |
           # shellcheck disable=SC2046
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${REGISTRY_IMAGE}@sha256:%s ' *)
+            $(printf "${REGISTRY_IMAGE}@sha256:%s " *)
 
       - name: Inspect image
         run: |
@@ -319,3 +319,4 @@ jobs:
           echo "image-tag=${STEPS_DOCKER_META_OUTPUTS_VERSION}" >> $GITHUB_OUTPUT
         env:
           STEPS_DOCKER_META_OUTPUTS_VERSION: ${{ steps.docker_meta.outputs.version }}
+
