@@ -1,0 +1,3 @@
+# ignore Trivy docker misconfigs since it's just for testing Actions
+AVD-DS-0002
+AVD-DS-0026
