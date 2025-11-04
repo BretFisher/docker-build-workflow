@@ -27,15 +27,24 @@ permissions:
   pull-requests: write
 
 jobs:
-  call-docker-build:
-    name: Call Docker Build
+  call-qemu-docker-build:
+    name: Call _QEMU_ Docker Build
 
     uses: ./.github/workflows/reusable-docker-build.yaml
 
-    secrets:
-      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+    with:
+      dockerhub-enable: false
+      ghcr-enable: true
 
-      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+      image-names: |
+        ghcr.io/bretfisher/docker-build-workflow-qemu
+
+      platforms: linux/amd64, linux/arm64
+
+  call-native-docker-build:
+    name: Call _Native_ Docker Build
+
+    uses: ./.github/workflows/reusable-docker-build-native.yaml
 
     with:
       dockerhub-enable: false
