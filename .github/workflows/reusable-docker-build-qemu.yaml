@@ -171,6 +171,7 @@ jobs:
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 #v6.18.0
         with:
           platforms: ${{ inputs.platforms }}
+          # this action is expected to receive user inputs directly, so no sanitization here
           # zizmor: ignore[template-injection]
           context: ${{ inputs.context }}
           file: ${{ inputs.file }}
@@ -226,6 +227,7 @@ jobs:
         # use this tag in another job with needs.<job-name>.outputs.image-tag
       - name: Find the primary image tag we just pushed, and output it
         id: image-tag
+        env:
+          STEPS_DOCKER_META_OUTPUTS_VERSION: ${{ steps.docker_meta.outputs.version }}
         run: |
-          # zizmor: ignore[template-injection]
-          echo "image-tag=${{ steps.docker_meta.outputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "image-tag=${STEPS_DOCKER_META_OUTPUTS_VERSION}" >> "$GITHUB_OUTPUT"
