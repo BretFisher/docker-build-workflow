@@ -23,11 +23,11 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 ## "But what does this workflow really do beyond just `docker build`?"
 
 1. Clone the repository
-2. New in 2025: *Native* multi-platform building for x86_64 and arm64 on GitHub's Runners (if you need other platorms, there's an example of using QEMU via docker/setup-qemu-action)
-3. Setup buildx for awesome and fast building via docker/setup-buildx-action
+2. New in 2025: _Native_ multi-platform building for x86_64 and arm64 on GitHub's Runners (if you need other platorms, there's an example of using QEMU via docker/setup-qemu-action)
+3. Setup buildx for awesome and fast building via `docker/setup-buildx-action`
 4. Log into Docker Hub and/or GHCR
-5. Add labels and tags via docker/metadata-action
-6. Build and push image via docker/build-push-action with GitHub-based layer caching
+5. Add labels and tags via `docker/metadata-action`
+6. Build and push image via `docker/build-push-action` with GitHub-based layer caching
 7. Reports tags and labels in the PR comments
 
 ## What other ways can I use this workflow?
@@ -45,7 +45,7 @@ I've added that example to my [github-actions-templates](https://github.com/Bret
 
 - [bretfisher/github-actions-templates](https://github.com/BretFisher/github-actions-templates) - Main reusable templates repository
 - [bretfisher/super-linter-workflow](https://github.com/BretFisher/super-linter-workflow) - Reusable linter workflow
-- (you are here) [bretfisher/docker-build-workflow](https://github.com/BretFisher/docker-build-workflow)- Reusable docker build workflow
+- (you are here) [bretfisher/docker-build-workflow](https://github.com/BretFisher/docker-build-workflow)- Reusable Docker build workflow
 - [bretfisher/docker-ci-automation](https://github.com/BretFisher/docker-ci-automation) - Step-by-step video and example of a Docker CI workflow
 - [My full list of container examples and tools](https://github.com/bretfisher)
 
