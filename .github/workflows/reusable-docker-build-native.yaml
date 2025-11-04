@@ -109,10 +109,9 @@ on:
 # Calling permissions must be equal to or greater than these reusable permissions for it to work
 # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
 
-permissions:
-  contents: read
-  packages: write # needed to push docker image to ghcr.io
-  pull-requests: write # needed to create and update comments in PRs
+# reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
 
 jobs:
   build-image:
@@ -124,6 +123,10 @@ jobs:
       fail-fast: false
       matrix:
         platform: ${{ fromJSON(inputs.platforms) }}
+
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
 
     steps:
       - name: Prepare
@@ -211,12 +214,21 @@ jobs:
 
   merge-manifest:
     name: Create and push manifest list
+
     runs-on: ubuntu-latest
+
     outputs:
       # only outputs the unique gha- image tag that's unique to each GHA run
       image-tag: ${{ steps.image-tag.outputs.image-tag }}
+
     needs:
       - build-image
+
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
+
     steps:
       - name: Prepare
         shell: bash

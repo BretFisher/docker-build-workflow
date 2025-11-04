@@ -21,14 +21,18 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write
-  pull-requests: write
+# reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
 
 jobs:
   call-qemu-docker-build:
     name: Call _QEMU_ Docker Build
+
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
 
     uses: ./.github/workflows/reusable-docker-build.yaml
 
@@ -43,6 +47,11 @@ jobs:
 
   call-native-docker-build:
     name: Call _Native_ Docker Build
+
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
 
     uses: ./.github/workflows/reusable-docker-build-native.yaml
 

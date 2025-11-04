@@ -21,10 +21,9 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write # needed to push docker image to ghcr.io
-  pull-requests: write # needed to create and update comments in PRs
+  # reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
 
 jobs:
   # run this job on every push to a PR
@@ -32,6 +31,10 @@ jobs:
   docker-build-pr:
     name: Call Build on PR
     if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
     # FIXME: fork this repo and update this path to YOUR reusable workflow location
     uses: bretfisher/docker-build-workflow/.github/workflows/reusable-docker-build.yaml@main
     with:
@@ -50,6 +53,10 @@ jobs:
     name: Call Build on Push
     # this if is filtered to only the main branch push event (see events at top)
     if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
     # FIXME: fork this repo and update this path to YOUR reusable workflow location
     uses: bretfisher/docker-build-workflow/.github/workflows/reusable-docker-build.yaml@main
     secrets:

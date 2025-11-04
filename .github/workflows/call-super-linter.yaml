@@ -13,9 +13,9 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
-permissions:
-  contents: read # clone the repo to lint
-  statuses: write #read/write to repo custom statuses
+# reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
 
 jobs:
   call-super-linter:
@@ -24,6 +24,10 @@ jobs:
     ### use Reusable Workflows to call my workflow remotely
     ### https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
     ### you can also call workflows from inside the same repo via file path
+
+    permissions:
+      contents: read # clone the repo to lint
+      statuses: write #read/write to repo custom statuses
 
     #FIXME: customize uri to point to your own reusable linter repository
     uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main

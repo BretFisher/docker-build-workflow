@@ -112,16 +112,20 @@ on:
 # Calling permissions must be equal to or greater than these reusable permissions for it to work
 # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
 
-permissions:
-  contents: read
-  packages: write # needed to push docker image to ghcr.io
-  pull-requests: write # needed to create and update comments in PRs
+# reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
 
 jobs:
   build-image:
     name: Build+Push
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
 
     outputs:
       # only outputs the unique gha- image tag that's unique to each GHA run
