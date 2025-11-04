@@ -11,6 +11,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      # Prefix all commit messages with "[actions] "
+      prefix: "[actions] "
 
   # Add this section for each directory with a Dockerfile, K8s manifest, or Helm chart
   # They must use a semver tag, and Dependabot must be able to access the registry

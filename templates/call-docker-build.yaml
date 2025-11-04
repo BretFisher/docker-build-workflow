@@ -8,22 +8,25 @@ on:
       - main
     # don't rebuild image if someone only edited unrelated files
     paths-ignore:
-      - 'README.md'
-      - '.github/linters/**'
+      - "README.md"
+      - ".github/linters/**"
   pull_request:
     # don't rebuild image if someone only edited unrelated files
     paths-ignore:
-      - 'README.md'
-      - '.github/linters/**'
+      - "README.md"
+      - ".github/linters/**"
 
 # cancel any previously-started, yet still active runs of this workflow on the same branch
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+# reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
+
 jobs:
   call-docker-build:
-
     name: Call Docker Build
 
     # FIXME: fork this repo and update this path to YOUR reusable workflow location
@@ -37,7 +40,7 @@ jobs:
       contents: read
       packages: write # needed to push docker image to ghcr.io
       pull-requests: write # needed to create and update comments in PRs
-    
+
     secrets:
 
       # Only needed if with:dockerhub-enable is true below
@@ -46,7 +49,7 @@ jobs:
       # dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
 
     with:
-      
+
       # NOTE: there are lots of input options for this reusable workflow
       # read the comments in the inputs area of the reusable workflow for more info
       # https://github.com/BretFisher/docker-build-workflow/blob/main/.github/workflows/reusable-docker-build.yaml
@@ -67,9 +70,11 @@ jobs:
       #   type=ref,event=pr,priority=100
 
       # context: "{{defaultContext}}"
-      
+
       # target:
-      
-      # platforms: linux/amd64
-      
+
+      # platforms are *native GitHub Runners by default, so only amd64 and/or arm64 are supported, and must be in JSON syntax.
+      # for more platform build options, there's a "QEMU" reusable workflow ption in this repo's .github/workflows folder
+      # platforms: '["linux/amd64", "linux/arm64"]'
+
       # comment-enable: true

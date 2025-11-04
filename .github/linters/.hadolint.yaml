@@ -1,5 +1,7 @@
 # README: https://github.com/hadolint/hadolint
 
+failure-threshold: warning
+
 # Often it's a good idea to do inline disables rather that repo-wide in this file.
 # Example of inline Dockerfile rules:
 # hadolint ignore=DL3018
@@ -16,7 +18,6 @@ ignored:
   - DL3059 #multiple consecutive runs
   - DL4006 #we don't need pipefail in this
   - SC2016 #we want single quotes sometimes
-
 
 # FULL TEMPLATE
 # failure-threshold: string               # name of threshold level (error | warning | info | style | ignore | none)
@@ -40,3 +41,4 @@ ignored:
 # strict-labels: boolean                  # true | false
 # disable-ignore-pragma: boolean          # true | false
 # trustedRegistries: string | [string]    # registry or list of registries
+

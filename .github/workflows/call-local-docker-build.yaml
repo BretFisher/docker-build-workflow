@@ -9,41 +9,57 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'README.md'
-      - '.github/linters/**'
+      - "README.md"
+      - ".github/linters/**"
   pull_request:
     paths-ignore:
-      - 'README.md'
-      - '.github/linters/**'
+      - "README.md"
+      - ".github/linters/**"
 
 # cancel any previously-started, yet still active runs of this workflow on the same branch
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+# reset permsissions to none at the workflow level
+# we'll set them at the job level below
+permissions: {}
+
 jobs:
-
-  call-docker-build:
-
-    name: Call Docker Build
-
-    uses: ./.github/workflows/reusable-docker-build.yaml
+  call-qemu-docker-build:
+    name: Call _QEMU_ Docker Build
 
     permissions:
       contents: read
-      packages: write
-      pull-requests: write
-    
-    secrets:
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
 
-      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-
-      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+    uses: ./.github/workflows/reusable-docker-build.yaml
 
     with:
-      
       dockerhub-enable: false
       ghcr-enable: true
 
       image-names: |
-        ghcr.io/${{ github.repository }}
+        ghcr.io/bretfisher/docker-build-workflow-qemu
+
+      platforms: linux/amd64, linux/arm64
+
+  call-native-docker-build:
+    name: Call _Native_ Docker Build
+
+    permissions:
+      contents: read
+      packages: write # needed to push docker image to ghcr.io
+      pull-requests: write # needed to create and update comments in PRs
+
+    uses: ./.github/workflows/reusable-docker-build-native.yaml
+
+    with:
+      dockerhub-enable: false
+      ghcr-enable: true
+
+      image-names: |
+        ghcr.io/bretfisher/docker-build-workflow
+
+      platforms: '["linux/amd64", "linux/arm64"]'
