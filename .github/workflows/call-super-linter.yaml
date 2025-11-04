@@ -30,8 +30,12 @@ jobs:
 
     ### Optional settings examples
 
-    # with:
-    ### For a DevOps-focused repository. Prevents some code-language linters from running
+    with:
+      ### Additional environment variables to pass to super-linter (one per line)
+      extra-envs: |
+        VALIDATE_TRIVY=false
+
+      ### For a DevOps-focused repository. Prevents some code-language linters from running
     ### defaults to false
     # devops-only: false
 

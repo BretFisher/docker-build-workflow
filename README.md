@@ -23,7 +23,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 ## "But what does this workflow really do beyond just `docker build`?"
 
 1. Clone the repository
-2. Setup QEMU for multi-platform building (via buildx) via docker/setup-qemu-action
+2. New in 2025: *Native* multi-platform building for x86_64 and arm64 on GitHub's Runners (if you need other platorms, there's an example of using QEMU via docker/setup-qemu-action)
 3. Setup buildx for awesome and fast building via docker/setup-buildx-action
 4. Log into Docker Hub and/or GHCR
 5. Add labels and tags via docker/metadata-action
