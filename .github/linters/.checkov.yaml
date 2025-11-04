@@ -1,2 +1,7 @@
+---
+# Don't report passed checks in output
+quiet: true
+
+# skip dockerfile checks in a sample repo
 skip-framework:
   - dockerfile
