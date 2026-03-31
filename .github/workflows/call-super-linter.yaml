@@ -30,8 +30,7 @@ jobs:
       statuses: write #read/write to repo custom statuses
 
     #FIXME: customize uri to point to your own reusable linter repository
-    # zizmor: ignore[unpinned-uses] -- reusable workflow in a repo I control; SHA pinning is handled inside the reusable workflow
-    uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main
+    uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main # zizmor: ignore[unpinned-uses]
 
     ### Optional settings examples
 

@@ -12,8 +12,7 @@ updates:
     schedule:
       interval: "daily"
     cooldown:
-      default: 3
-      semver-major: 7
+      default-days: 7
     commit-message:
       # Prefix all commit messages with "[actions] "
       prefix: "[actions] "
@@ -29,8 +28,7 @@ updates:
     schedule:
       interval: "weekly"
     cooldown:
-      default: 3
-      semver-major: 7
+      default-days: 7
     commit-message:
       # Prefix all commit messages with "[docker] "
       prefix: "[docker] "
