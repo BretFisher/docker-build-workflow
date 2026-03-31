@@ -19,6 +19,7 @@ ignored:
   - DL4006 #we don't need pipefail in this
   - SC2016 #we want single quotes sometimes
 
+
 # FULL TEMPLATE
 # failure-threshold: string               # name of threshold level (error | warning | info | style | ignore | none)
 # format: string                          # Output format (tty | json | checkstyle | codeclimate | gitlab_codeclimate | gnu | codacy)
