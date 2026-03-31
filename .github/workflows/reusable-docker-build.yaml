@@ -108,7 +108,7 @@ on:
         value: ${{ jobs.build-image.outputs.image-tag }}
 
 # set permissions here for what's required to run this Reusable Workflow
-# However, permisions are set in the GITHUB_TOKEN by the **calling** workflow
+# However, permissions are set in the GITHUB_TOKEN by the **calling** workflow
 # Calling permissions must be equal to or greater than these reusable permissions for it to work
 # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
 
@@ -189,7 +189,7 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           # add attestations for provenance and sbom (bleeding edge BuildKit features)
-          # NOTE: for now, this reults in `unknown/unknown` images in all registries but Hub
+          # NOTE: for now, this results in `unknown/unknown` images in all registries but Hub
           # https://docs.docker.com/build/attestations/attestation-storage/
           provenance: true
           sbom: true

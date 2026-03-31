@@ -11,6 +11,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
     commit-message:
       # Prefix all commit messages with "[actions] "
       prefix: "[actions] "
@@ -25,6 +27,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     commit-message:
       # Prefix all commit messages with "[docker] "
       prefix: "[docker] "
