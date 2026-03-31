@@ -27,6 +27,7 @@ jobs:
 
     permissions:
       contents: read # clone the repo to lint
+      pull-requests: write # create a summary comment in PR
       statuses: write #read/write to repo custom statuses
 
     #FIXME: customize uri to point to your own reusable linter repository
