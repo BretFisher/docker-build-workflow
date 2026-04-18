@@ -27,10 +27,11 @@ jobs:
 
     permissions:
       contents: read # clone the repo to lint
+      pull-requests: write # create a summary comment in PR
       statuses: write #read/write to repo custom statuses
 
     #FIXME: customize uri to point to your own reusable linter repository
-    uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main
+    uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main # zizmor: ignore[unpinned-uses]
 
     ### Optional settings examples
 
