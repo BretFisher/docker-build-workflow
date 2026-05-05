@@ -14,6 +14,7 @@ A Reusable Workflow of the Docker GitHub Actions steps. Enhanced with learnings 
 3. Gives you inputs so you can reuse this workflow across many repositories and only needing the full workflow stored in a central repository.
 4. New in 2023: Adds [SBOM and Provenance](https://docs.docker.com/build/attestations/) metadata to your images.
 5. New in 2023: [Example template](./templates/call-docker-build-promote.yaml) to use the reusable workflow twice, in an "image promotion" style of dual registries (one for devs and PRs, one for production after PR merges)
+6. New in 2025: [An alternative reusable build workflow that uses native platform runners](https://github.com/BretFisher/docker-build-workflow/blob/main/.github/workflows/reusable-docker-build-native.yaml) with BuildKit for arm64 + x86_64 rather than QEMU emulation
 
 ## Steps to adopt this workflow
 
