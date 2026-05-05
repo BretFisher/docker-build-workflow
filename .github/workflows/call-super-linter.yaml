@@ -33,17 +33,5 @@ jobs:
     #FIXME: customize uri to point to your own reusable linter repository
     uses: bretfisher/super-linter-workflow/.github/workflows/reusable-super-linter.yaml@main # zizmor: ignore[unpinned-uses]
 
-    ### Optional settings examples
 
-    with:
-      ### Additional environment variables to pass to super-linter (one per line)
-      extra-envs: |
-        VALIDATE_TRIVY=false
-
-      ### For a DevOps-focused repository. Prevents some code-language linters from running
-    ### defaults to false
-    # devops-only: false
-
-    ### A regex to exclude files from linting
-    ### defaults to empty
-    # filter-regex-exclude: html/.*
+    ### Remember .github/super-linter.env is injected for setting linter on/off
