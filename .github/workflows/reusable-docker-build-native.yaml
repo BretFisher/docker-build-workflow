@@ -90,6 +90,14 @@ on:
         description: Build stage to target
         required: false
         type: string
+      environment_name:
+        description: GitHub Environment to run this job in
+        required: false
+        type: string
+      environment_url:
+        description: URL of the GitHub Environment to run this job for
+        required: false
+        type: string
 
     secrets:
       dockerhub-username:
@@ -109,7 +117,7 @@ on:
 # Calling permissions must be equal to or greater than these reusable permissions for it to work
 # https://docs.github.com/en/actions/using-workflows/reusing-workflows#supported-keywords-for-jobs-that-call-a-reusable-workflow
 
-# reset permsissions to none at the workflow level
+# reset permissions to none at the workflow level
 # we'll set them at the job level below
 permissions: {}
 
@@ -118,6 +126,9 @@ jobs:
     name: Build+Push
 
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment_name || null }}
+      url: ${{ inputs.environment_url || null }}
 
     strategy:
       fail-fast: false
@@ -216,6 +227,9 @@ jobs:
     name: Create and push manifest list
 
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment_name || null }}
+      url: ${{ inputs.environment_url || null }}
 
     outputs:
       # only outputs the unique gha- image tag that's unique to each GHA run

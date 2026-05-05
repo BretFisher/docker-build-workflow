@@ -53,13 +53,19 @@ jobs:
       packages: write # needed to push docker image to ghcr.io
       pull-requests: write # needed to create and update comments in PRs
 
+    secrets: inherit # Required to access environment-specific secrets
+
     uses: ./.github/workflows/reusable-docker-build-native.yaml
 
     with:
-      dockerhub-enable: false
+      dockerhub-enable: true
       ghcr-enable: true
 
       image-names: |
         ghcr.io/bretfisher/docker-build-workflow
+        bretfisher/docker-build-workflow
 
       platforms: '["linux/amd64", "linux/arm64"]'
+
+      environment_name: docker-hub-push
+      environment_url: https://hub.docker.com/r/bretfisher/docker-build-workflow
