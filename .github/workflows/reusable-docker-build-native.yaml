@@ -20,6 +20,12 @@ on:
   workflow_call:
     # allow reuse of this workflow in other repos
     inputs:
+      cache-scope:
+        description: GitHub Actions cache scope for BuildKit layers (default is the first image name plus the target)
+        # each image (and target) needs its own scope, or builds overwrite each other's cache
+        # https://docs.docker.com/build/cache/backends/gha/#scope
+        required: false
+        type: string
       comment-enable:
         description: Create a PR comment with image tags and labels
         required: false
@@ -137,10 +143,17 @@ jobs:
           printf 'PLATFORM_PAIR=%s\n' "${platform//\//-}" >> "$GITHUB_ENV"
           image="${INPUTS_IMAGE_NAMES}"
           printf 'REGISTRY_IMAGE=%s\n' "${image,,}" >> "$GITHUB_ENV"
+          # matrix jobs run at the same time, so each platform gets its own cache scope
+          first_image="${INPUTS_IMAGE_NAMES%%$'\n'*}"
+          scope="${INPUTS_CACHE_SCOPE:-${first_image,,}-${INPUTS_TARGET:-default}}"
+          scope="${scope//[\/:]/-}"
+          printf 'CACHE_SCOPE=%s\n' "${scope}-${platform//\//-}" >> "$GITHUB_ENV"
           printf 'Building for platform: %s\n' "$platform"
         env:
           MATRIX_PLATFORM: ${{ matrix.platform }}
           INPUTS_IMAGE_NAMES: ${{ inputs.image-names }}
+          INPUTS_CACHE_SCOPE: ${{ inputs.cache-scope }}
+          INPUTS_TARGET: ${{ inputs.target }}
 
         # BuildKit (used with `docker buildx`) is the best way to build images
       - name: Set up Docker Buildx
@@ -185,8 +198,9 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           # it uses github cache API for faster builds:
           # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#cache-backend-api
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ env.CACHE_SCOPE }}
+          # a failed cache export must not fail the image build
+          cache-to: type=gha,scope=${{ env.CACHE_SCOPE }},mode=max,ignore-error=true
           tags: ${{ env.REGISTRY_IMAGE }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           # add attestations for provenance and sbom (bleeding edge BuildKit features)
