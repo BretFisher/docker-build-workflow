@@ -2,6 +2,7 @@
 name: Docker Build and Push
 # NEW FOR 2025! A *native builders* variant of my reusable docker build example
 #  that only uses GitHub Actions Runners rather than QEMU emulation for cross-platform builds.
+#  Each platform builds in its own job: linux/arm64 on an ubuntu-24.04-arm runner, everything else on ubuntu-latest.
 #  ONLY SUPPORTS amd64 (x86_64) and arm64 (aarch64) platforms (as those are the only ones GH runners support natively).
 #  If you need to build for other platforms (like arm/v7), use the original reusable-docker-build.yaml
 
@@ -117,7 +118,9 @@ jobs:
   build-image:
     name: Build+Push
 
-    runs-on: ubuntu-latest
+    # build each platform on a runner with the same CPU architecture, so no emulation is needed
+    # without this, arm64 jobs run on x86_64 and BuildKit silently falls back to its built-in QEMU
+    runs-on: ${{ matrix.platform == 'linux/arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
 
     strategy:
       fail-fast: false
